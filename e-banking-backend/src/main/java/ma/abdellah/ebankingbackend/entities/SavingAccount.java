@@ -2,13 +2,11 @@ package ma.abdellah.ebankingbackend.entities;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @DiscriminatorValue("SA")
-@Data @AllArgsConstructor @NoArgsConstructor
+@AllArgsConstructor @NoArgsConstructor @Getter @Setter
 public class SavingAccount extends BankAccount{
     private double interestRate;
 }
