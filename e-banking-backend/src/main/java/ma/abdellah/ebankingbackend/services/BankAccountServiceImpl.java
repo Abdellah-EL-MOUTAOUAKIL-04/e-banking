@@ -2,7 +2,10 @@ package ma.abdellah.ebankingbackend.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ma.abdellah.ebankingbackend.dtos.BankAccountDTO;
+import ma.abdellah.ebankingbackend.dtos.CurrentBankAccountDTO;
 import ma.abdellah.ebankingbackend.dtos.CustomerDTO;
+import ma.abdellah.ebankingbackend.dtos.SavingBankAccountDTO;
 import ma.abdellah.ebankingbackend.entities.*;
 import ma.abdellah.ebankingbackend.enums.AccountStatus;
 import ma.abdellah.ebankingbackend.enums.OperationType;
@@ -16,9 +19,11 @@ import ma.abdellah.ebankingbackend.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -52,7 +57,7 @@ public class BankAccountServiceImpl implements BankAccountService{
     }
 
     @Override
-    public CurrentAccount saveCurrentBankAccount(double initialBalance, double overDraft, Long customerId) throws CustomerNotFoundException {
+    public CurrentBankAccountDTO saveCurrentBankAccount(double initialBalance, double overDraft, Long customerId) throws CustomerNotFoundException {
         Customer customer=customerRepository.findById(customerId).orElse(null);
         if(customer==null) throw new CustomerNotFoundException("Customer not found");
 
@@ -65,11 +70,11 @@ public class BankAccountServiceImpl implements BankAccountService{
         currentAccount.setOverDraft(overDraft);
 
         CurrentAccount savedBankAccount=bankAccountRepository.save(currentAccount);
-        return savedBankAccount;
+        return dtoMapper.fromCurrentBankAccount(savedBankAccount);
     }
 
     @Override
-    public SavingAccount saveSavingBankAccount(double initialBalance, double interestRate, Long customerId) throws CustomerNotFoundException {
+    public SavingBankAccountDTO saveSavingBankAccount(double initialBalance, double interestRate, Long customerId) throws CustomerNotFoundException {
         Customer customer=customerRepository.findById(customerId).orElse(null);
         if(customer==null) throw new CustomerNotFoundException("Customer not found");
 
@@ -81,24 +86,23 @@ public class BankAccountServiceImpl implements BankAccountService{
         savingAccount.setCustomer(customer);
         savingAccount.setInterestRate(interestRate);
         SavingAccount savedBankAccount=bankAccountRepository.save(savingAccount);
-        return savedBankAccount;
+        return dtoMapper.fromSavingBankAccount(savedBankAccount);
     }
 
     @Override
-    public List<CustomerDTO> listCustomers() {
-        List<Customer> customers= customerRepository.findAll();
-        return customers.stream().map(customer -> dtoMapper.fromCustomer(customer)).toList();
-    }
-
-    @Override
-    public BankAccount getBankAccount(String accountId) throws BankAccountNotFoundException {
+    public BankAccountDTO getBankAccount(String accountId) throws BankAccountNotFoundException {
         BankAccount bankAccount=bankAccountRepository.findById(accountId).orElseThrow(()->new BankAccountNotFoundException("Bank account not found"));
-        return bankAccount;
+        if(bankAccount instanceof SavingAccount)
+            return dtoMapper.fromSavingBankAccount((SavingAccount) bankAccount);
+        return dtoMapper.fromCurrentBankAccount((CurrentAccount) bankAccount);
     }
+
+
+
 
     @Override
     public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, BalanceNotSufficientException {
-        BankAccount bankAccount=getBankAccount(accountId);
+        BankAccount bankAccount=bankAccountRepository.findById(accountId).orElseThrow(()->new BankAccountNotFoundException("Bank account not found"));
         if(bankAccount.getBalance()<amount) throw new BalanceNotSufficientException("Insufficient balance");
         AccountOperation accountOperation=new AccountOperation();
         accountOperation.setType(OperationType.DEBIT);
@@ -113,7 +117,7 @@ public class BankAccountServiceImpl implements BankAccountService{
 
     @Override
     public void credit(String accountId, double amount, String description) throws BankAccountNotFoundException {
-        BankAccount bankAccount=getBankAccount(accountId);
+        BankAccount bankAccount=bankAccountRepository.findById(accountId).orElseThrow(()->new BankAccountNotFoundException("Bank account not found"));
         AccountOperation accountOperation=new AccountOperation();
         accountOperation.setType(OperationType.CREDIT);
         accountOperation.setAmount(amount);
@@ -132,8 +136,15 @@ public class BankAccountServiceImpl implements BankAccountService{
     }
 
     @Override
-    public List<BankAccount> bankAccountList(){
-        return bankAccountRepository.findAll();
+    public List<BankAccountDTO> bankAccountList(){
+        List<BankAccount> bankAccounts=bankAccountRepository.findAll();
+        List<BankAccountDTO> bankAccountDTOS=bankAccounts.stream().map(bankAccount -> {
+            if(bankAccount instanceof SavingAccount)
+                return dtoMapper.fromSavingBankAccount((SavingAccount) bankAccount);
+            else
+                return dtoMapper.fromCurrentBankAccount((CurrentAccount) bankAccount);
+            }).collect(Collectors.toList());
+        return bankAccountDTOS;
     }
 
     @Override
@@ -141,4 +152,11 @@ public class BankAccountServiceImpl implements BankAccountService{
         Customer customer=customerRepository.findById(customerId).orElseThrow(()->new CustomerNotFoundException("Customer not found"));
         return dtoMapper.fromCustomer(customer);
     }
+    @Override
+    public List<CustomerDTO> listCustomers() {
+        List<Customer> customers= customerRepository.findAll();
+        return customers.stream().map(customer -> dtoMapper.fromCustomer(customer)).toList();
+    }
+
+
 }

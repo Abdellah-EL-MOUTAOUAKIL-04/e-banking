@@ -1,6 +1,9 @@
 package ma.abdellah.ebankingbackend;
 
+import ma.abdellah.ebankingbackend.dtos.BankAccountDTO;
+import ma.abdellah.ebankingbackend.dtos.CurrentBankAccountDTO;
 import ma.abdellah.ebankingbackend.dtos.CustomerDTO;
+import ma.abdellah.ebankingbackend.dtos.SavingBankAccountDTO;
 import ma.abdellah.ebankingbackend.entities.*;
 import ma.abdellah.ebankingbackend.enums.AccountStatus;
 import ma.abdellah.ebankingbackend.enums.OperationType;
@@ -86,11 +89,17 @@ public class EBankingBackendApplication {
                 try {
                     bankAccountService.saveCurrentBankAccount(Math.random()*90000,9000, c.getId());
 					bankAccountService.saveSavingBankAccount(Math.random()*12000, 5.5, c.getId());
-					List<BankAccount> bankAccounts = bankAccountService.bankAccountList();
-					for(BankAccount bankAccount:bankAccounts){
+					List<BankAccountDTO> bankAccountDTOS = bankAccountService.bankAccountList();
+					for(BankAccountDTO bankAccount:bankAccountDTOS){
 						for (int i = 0; i < 10; i++) {
-							bankAccountService.credit(bankAccount.getId(), 10000 + Math.random() * 12000, "Credit");
-							bankAccountService.debit(bankAccount.getId(), 1000 + Math.random() * 1200, "Debit");
+							String accountId;
+							if(bankAccount instanceof SavingBankAccountDTO){
+								accountId = ((SavingBankAccountDTO) bankAccount).getId();
+							}else {
+								accountId = ((CurrentBankAccountDTO) bankAccount).getId();
+							}
+							bankAccountService.credit(accountId, 10000 + Math.random() * 12000, "Credit");
+							bankAccountService.debit(accountId, 1000 + Math.random() * 1200, "Debit");
 						}
 					}
 				} catch (CustomerNotFoundException | BankAccountNotFoundException | BalanceNotSufficientException e) {

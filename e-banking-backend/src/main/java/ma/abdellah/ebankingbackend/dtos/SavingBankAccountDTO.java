@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class SavingBankAccountDTO {
+public class SavingBankAccountDTO extends BankAccountDTO {
     private String id;
     private double balance;
     private Date createdAt;
