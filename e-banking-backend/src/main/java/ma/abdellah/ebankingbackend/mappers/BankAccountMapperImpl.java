@@ -1,8 +1,10 @@
 package ma.abdellah.ebankingbackend.mappers;
 
+import ma.abdellah.ebankingbackend.dtos.AccountOperationDTO;
 import ma.abdellah.ebankingbackend.dtos.CurrentBankAccountDTO;
 import ma.abdellah.ebankingbackend.dtos.CustomerDTO;
 import ma.abdellah.ebankingbackend.dtos.SavingBankAccountDTO;
+import ma.abdellah.ebankingbackend.entities.AccountOperation;
 import ma.abdellah.ebankingbackend.entities.CurrentAccount;
 import ma.abdellah.ebankingbackend.entities.Customer;
 import ma.abdellah.ebankingbackend.entities.SavingAccount;
@@ -52,6 +54,18 @@ public class BankAccountMapperImpl {
         BeanUtils.copyProperties(currentBankAccountDTO,currentAccount);
         currentAccount.setCustomer(fromCustomerDTO(currentBankAccountDTO.getCustomerDTO()));
         return currentAccount;
+    }
+
+    public AccountOperationDTO fromAccountOperation(AccountOperation accountOperation){
+        AccountOperationDTO accountOperationDTO=new AccountOperationDTO();
+        BeanUtils.copyProperties(accountOperation,accountOperationDTO);
+        return accountOperationDTO;
+    }
+
+    public AccountOperation fromAccountOperationDTO(AccountOperationDTO accountOperationDTO){
+        AccountOperation accountOperation=new AccountOperation();
+        BeanUtils.copyProperties(accountOperationDTO,accountOperation);
+        return accountOperation;
     }
 
 }

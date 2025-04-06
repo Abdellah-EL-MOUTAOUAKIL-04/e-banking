@@ -89,24 +89,24 @@ public class EBankingBackendApplication {
                 try {
                     bankAccountService.saveCurrentBankAccount(Math.random()*90000,9000, c.getId());
 					bankAccountService.saveSavingBankAccount(Math.random()*12000, 5.5, c.getId());
-					List<BankAccountDTO> bankAccountDTOS = bankAccountService.bankAccountList();
-					for(BankAccountDTO bankAccount:bankAccountDTOS){
-						for (int i = 0; i < 10; i++) {
-							String accountId;
-							if(bankAccount instanceof SavingBankAccountDTO){
-								accountId = ((SavingBankAccountDTO) bankAccount).getId();
-							}else {
-								accountId = ((CurrentBankAccountDTO) bankAccount).getId();
-							}
-							bankAccountService.credit(accountId, 10000 + Math.random() * 12000, "Credit");
-							bankAccountService.debit(accountId, 1000 + Math.random() * 1200, "Debit");
-						}
-					}
-				} catch (CustomerNotFoundException | BankAccountNotFoundException | BalanceNotSufficientException e) {
+
+				} catch (CustomerNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-
             });
+			List<BankAccountDTO> bankAccountDTOS = bankAccountService.bankAccountList();
+			for(BankAccountDTO bankAccount:bankAccountDTOS){
+				for (int i = 0; i < 10; i++) {
+					String accountId;
+					if(bankAccount instanceof SavingBankAccountDTO){
+						accountId = ((SavingBankAccountDTO) bankAccount).getId();
+					}else {
+						accountId = ((CurrentBankAccountDTO) bankAccount).getId();
+					}
+					bankAccountService.credit(accountId, 10000 + Math.random() * 12000, "Credit");
+					bankAccountService.debit(accountId, 1000 + Math.random() * 1200, "Debit");
+				}
+			}
 		};
 	}
 }

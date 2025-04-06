@@ -1,9 +1,6 @@
 package ma.abdellah.ebankingbackend.services;
 
-import ma.abdellah.ebankingbackend.dtos.BankAccountDTO;
-import ma.abdellah.ebankingbackend.dtos.CurrentBankAccountDTO;
-import ma.abdellah.ebankingbackend.dtos.CustomerDTO;
-import ma.abdellah.ebankingbackend.dtos.SavingBankAccountDTO;
+import ma.abdellah.ebankingbackend.dtos.*;
 import ma.abdellah.ebankingbackend.entities.BankAccount;
 import ma.abdellah.ebankingbackend.entities.CurrentAccount;
 import ma.abdellah.ebankingbackend.entities.Customer;
@@ -32,4 +29,8 @@ public interface BankAccountService {
     List<BankAccountDTO> bankAccountList();
 
     CustomerDTO getCustomer(Long customerId) throws CustomerNotFoundException;
+
+    List<AccountOperationDTO> accountHistory(String accountId);
+
+    AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws BankAccountNotFoundException;
 }
