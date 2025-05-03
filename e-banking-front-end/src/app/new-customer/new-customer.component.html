@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Customer' : 'New Customer' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="newCustomerFormGroup" (ngSubmit)="handleSaveCustomer()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="Enter name">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="Enter email">
+    </mat-form-field>
+
+    <div class="button-container" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+      <button mat-button mat-dialog-close color="warn">Cancel</button>
+      <button mat-button mat-dialog-close cdkFocusInitial color="primary" type="submit" [disabled]="!newCustomerFormGroup.valid">
+        {{ isEditMode ? 'Update' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>

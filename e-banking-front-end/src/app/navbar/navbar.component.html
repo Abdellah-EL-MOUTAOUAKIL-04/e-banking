@@ -1,0 +1,43 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>E-banking</span>
+  <span class="navbar-spacer"></span>
+  <button mat-button>
+    Home
+  </button>
+
+  <button mat-button [matMenuTriggerFor]="customerMenu">
+    <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+    Customers
+  </button>
+  <mat-menu #customerMenu>
+    <button mat-menu-item routerLink="/customers" disableRipple>All customers</button>
+    <button mat-menu-item (click)="openNewCustomerDialog()" disableRipple>New customer</button>
+  </mat-menu>
+
+  <button mat-button routerLink="/accounts">
+    Accounts
+  </button>
+</mat-toolbar>
+
+
+<mat-drawer-container>
+  <mat-drawer #drawer mode="side" position="start" opened="true">
+    <mat-nav-list>
+      <mat-list-item>
+        <button mat-button>
+          <mat-icon>dashboard</mat-icon>
+          Dashboard
+        </button>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div style="min-height: 600px" class="container">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

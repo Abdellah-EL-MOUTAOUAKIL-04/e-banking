@@ -1,0 +1,71 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Customer List</mat-card-title>
+    <mat-card-subtitle>List of all customers</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+
+    <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchCustomers()">
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput formControlName="keyword" placeholder="Enter keyword">
+        <button mat-button type="submit" matSuffix>
+          <mat-icon matSuffix>search</mat-icon>
+        </button>
+      </mat-form-field>
+    </form>
+
+    <ng-container *ngIf="isLoading; else dataLoaded">
+      <div class="spinner-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    </ng-container>
+
+
+    <ng-template #dataLoaded>
+
+      <table mat-table [dataSource]="customers" *ngIf="customers" class="mat-elevation-z2">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let customer"> {{customer.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let customer"> {{customer.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef> Email </th>
+          <td mat-cell *matCellDef="let customer"> {{customer.email}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let customer">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="handleEditCustomer(customer)">
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+              </button>
+              <button mat-menu-item (click)="handleDeleteCustomer(customer.id)">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </ng-template>
+  </mat-card-content>
+</mat-card>
