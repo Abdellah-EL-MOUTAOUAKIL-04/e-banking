@@ -12,16 +12,20 @@ import {MatListItem, MatNavList} from '@angular/material/list';
 import {MatMenuModule} from '@angular/material/menu';
 import { CustomersComponent } from './customers/customers.component';
 import { AccountsComponent } from './accounts/accounts.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, provideHttpClient, withInterceptors} from '@angular/common/http';
 import {MatCard, MatCardModule} from '@angular/material/card';
 import {MatTable, MatTableModule} from '@angular/material/table';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInput, MatInputModule} from '@angular/material/input';
 import { NewCustomerComponent } from './new-customer/new-customer.component';
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 import { DeleteCustomerComponent } from './delete-customer/delete-customer.component';
+import { LoginComponent } from './login/login.component';
+import { AdminTemplateComponent } from './admin-template/admin-template.component';
+import {appHttpInterceptor} from './interceptors/app-http.interceptor';
+import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,10 @@ import { DeleteCustomerComponent } from './delete-customer/delete-customer.compo
     CustomersComponent,
     AccountsComponent,
     NewCustomerComponent,
-    DeleteCustomerComponent
+    DeleteCustomerComponent,
+    LoginComponent,
+    AdminTemplateComponent,
+    NotAuthorizedComponent
   ],
   imports: [
     BrowserModule,
@@ -53,8 +60,11 @@ import { DeleteCustomerComponent } from './delete-customer/delete-customer.compo
     MatDialogTitle,
     MatDialogContent,
     MatDialogClose,
+    FormsModule,
   ],
-  providers: [],
+  providers: [
+    provideHttpClient(withInterceptors([appHttpInterceptor]))
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

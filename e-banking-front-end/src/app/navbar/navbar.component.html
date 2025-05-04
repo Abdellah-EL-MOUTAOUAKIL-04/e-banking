@@ -13,12 +13,22 @@
     Customers
   </button>
   <mat-menu #customerMenu>
-    <button mat-menu-item routerLink="/customers" disableRipple>All customers</button>
-    <button mat-menu-item (click)="openNewCustomerDialog()" disableRipple>New customer</button>
+    <button mat-menu-item routerLink="/admin/customers" disableRipple>All customers</button>
+    <button mat-menu-item (click)="openNewCustomerDialog()" *ngIf="authService.roles.includes('ADMIN')" disableRipple>New customer</button>
   </mat-menu>
 
-  <button mat-button routerLink="/accounts">
+  <button mat-button routerLink="/admin/accounts">
     Accounts
+  </button>
+  <span class="navbar-spacer"></span>
+  <div>
+    <button mat-button *ngIf="authService.isAuthenticated">
+      <mat-icon iconPositionEnd>account_circle</mat-icon>
+      {{authService.username}}
+    </button>
+  </div>
+  <button mat-icon-button (click)="handleLogout()">
+    <mat-icon>logout</mat-icon>
   </button>
 </mat-toolbar>
 

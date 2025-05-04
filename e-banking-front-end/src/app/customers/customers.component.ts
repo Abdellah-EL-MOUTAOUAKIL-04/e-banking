@@ -87,4 +87,6 @@ export class CustomersComponent implements OnInit{
       }
     });
   }
+
+  protected readonly console = console;
 }
