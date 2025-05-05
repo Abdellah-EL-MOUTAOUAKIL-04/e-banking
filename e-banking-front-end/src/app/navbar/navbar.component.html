@@ -17,9 +17,14 @@
     <button mat-menu-item (click)="openNewCustomerDialog()" *ngIf="authService.roles.includes('ADMIN')" disableRipple>New customer</button>
   </mat-menu>
 
-  <button mat-button routerLink="/admin/accounts">
+  <button mat-button [matMenuTriggerFor]="accountMenu">
+    <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
     Accounts
   </button>
+  <mat-menu #accountMenu>
+    <button mat-menu-item routerLink="/admin/accounts" disableRipple>All Accounts</button>
+  </mat-menu>
+
   <span class="navbar-spacer"></span>
   <div>
     <button mat-button *ngIf="authService.isAuthenticated">

@@ -9,21 +9,17 @@
       <mat-form-field appearance="outline">
         <mat-label>Search</mat-label>
         <input matInput formControlName="keyword" placeholder="Enter keyword">
-        <button mat-button type="submit" matSuffix>
+        <button mat-icon-button type="submit" matSuffix>
           <mat-icon matSuffix>search</mat-icon>
         </button>
       </mat-form-field>
     </form>
 
-    <ng-container *ngIf="isLoading; else dataLoaded">
-      <div class="spinner-container">
-        <mat-spinner diameter="40"></mat-spinner>
-      </div>
+    <ng-container *ngIf="isLoading$ | async; else tableContent">
+      <app-loading-spinner></app-loading-spinner>
     </ng-container>
 
-
-    <ng-template #dataLoaded>
-
+    <ng-template #tableContent>
       <table mat-table [dataSource]="customers" *ngIf="customers" class="mat-elevation-z2">
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef> ID </th>

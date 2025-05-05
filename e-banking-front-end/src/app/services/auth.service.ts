@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {jwtDecode} from 'jwt-decode';
 import {Router} from '@angular/router';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class AuthService {
       headers:new HttpHeaders({}).set("Content-type", "application/x-www-form-urlencoded")
     };
     let params=new HttpParams().set('username', username).set('password', password);
-    return this.http.post("http://localhost:8085/auth/login", params, options);
+    return this.http.post(environment.backendHost+"/auth/login", params, options);
 
   }
 
@@ -30,8 +31,7 @@ export class AuthService {
     this.username=undefined;
     this.accessToken=undefined;
     window.localStorage.removeItem('jwt-token');
-    window.location.reload();
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/login').then();
   }
 
   loadProfile(data: any) {
@@ -54,7 +54,8 @@ export class AuthService {
     let token=window.localStorage.getItem('jwt-token');
     if(token){
       this.loadProfile({ 'access-token': token });
-      this.router.navigateByUrl('/admin/customers');
+      console.log("Token loaded from local storage:", token);
+      //this.router.navigateByUrl('/admin/customers').then();
     }
   }
 }

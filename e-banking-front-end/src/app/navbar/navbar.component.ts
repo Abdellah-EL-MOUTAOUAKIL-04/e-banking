@@ -1,7 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NewCustomerComponent} from '../new-customer/new-customer.component';
-import {CustomerService} from '../services/customer.service';
 import {AuthService} from '../services/auth.service';
 import {Router} from '@angular/router';
 

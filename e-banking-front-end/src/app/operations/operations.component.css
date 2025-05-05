@@ -1,0 +1,6 @@
+::ng-deep mat-dialog-content {
+  overflow: visible !important;
+  max-height: 80vh !important;
+}
+
+

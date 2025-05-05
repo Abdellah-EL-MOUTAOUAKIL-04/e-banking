@@ -7,6 +7,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {DeleteCustomerComponent} from '../delete-customer/delete-customer.component';
 import {NewCustomerComponent} from '../new-customer/new-customer.component';
+import {LoadingService} from '../services/loading.service';
 
 @Component({
   selector: 'app-customers',
@@ -17,12 +18,14 @@ import {NewCustomerComponent} from '../new-customer/new-customer.component';
 export class CustomersComponent implements OnInit{
   customers!:Array<Customer>;
   searchFormGroup!:FormGroup;
-  isLoading:boolean = true;
   errorMessage!:string;
   displayedColumns=['id', 'name','email','actions'];
-  constructor(private customerService:CustomerService,private fb:FormBuilder,private _dialog:MatDialog) {
+  isLoading$!: Observable<boolean>;
+
+  constructor(private customerService:CustomerService,private fb:FormBuilder,private _dialog:MatDialog,  private loadingService: LoadingService) {
   }
   ngOnInit(): void {
+    this.isLoading$ = this.loadingService.isLoading$;
     this.searchFormGroup=this.fb.group({
       keyword:this.fb.control(null)
     });
@@ -32,38 +35,37 @@ export class CustomersComponent implements OnInit{
     });
   }
 
-  handleSearchCustomers() {
-    this.isLoading = true;
-    let keyword = this.searchFormGroup?.value.keyword;
-    this.customerService.searchCustomers(keyword).subscribe({
+  loadCustomers() {
+    this.loadingService.show();
+    this.customerService.getCustomers().subscribe({
       next: (data) => {
         this.customers = data;
-        if(this.customers.length == 0) {
-          this.errorMessage = "No customers found";
-        }else{
-          this.errorMessage = "";
-        }
-        this.isLoading = false;
+        this.errorMessage = '';
+        this.loadingService.hide();
       },
       error: (err) => {
         this.errorMessage = err.message;
-        this.isLoading = false;
+        this.loadingService.hide();
       }
     });
   }
 
-  loadCustomers() {
-    this.customerService.getCustomers().subscribe({
+  handleSearchCustomers() {
+    this.loadingService.show();
+    let keyword = this.searchFormGroup?.value.keyword;
+    this.customerService.searchCustomers(keyword).subscribe({
       next: (data) => {
         this.customers = data;
-        this.isLoading = false;
+        this.errorMessage = data.length === 0 ? 'No customers found' : '';
+        this.loadingService.hide();
       },
       error: (err) => {
         this.errorMessage = err.message;
-        this.isLoading = false;
+        this.loadingService.hide();
       }
     });
   }
+
   handleEditCustomer(customer:Customer) {
     this._dialog.open(NewCustomerComponent, {
       data: customer

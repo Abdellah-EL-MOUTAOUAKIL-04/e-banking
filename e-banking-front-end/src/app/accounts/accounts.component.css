@@ -1,0 +1,17 @@
+::ng-deep .current-chip {
+  background-color: #93c5fd !important;
+}
+
+::ng-deep .saving-chip {
+  background-color: #86efac !important;
+}
+
+::ng-deep .current-chip .mat-chip-content {
+  background-color: #2563eb !important;
+  font-weight: bold;
+}
+
+::ng-deep .saving-chip .mat-chip-content {
+  color: #ca8a04 !important;
+  font-weight: bold;
+}

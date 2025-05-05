@@ -1,1 +1,74 @@
-<p>accounts works!</p>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Accounts List</mat-card-title>
+    <mat-card-subtitle>List of all accounts</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchAccount()">
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput formControlName="keyword" placeholder="Enter Account Id">
+        <button mat-icon-button type="submit" matSuffix>
+          <mat-icon matSuffix>search</mat-icon>
+        </button>
+      </mat-form-field>
+    </form>
+    <ng-container *ngIf="isLoading$ | async; else tableContent">
+      <app-loading-spinner></app-loading-spinner>
+    </ng-container>
+    <ng-template #tableContent>
+      <table mat-table [dataSource]="accounts" *ngIf="accounts" class="mat-elevation-z2">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let account"> {{account.id}} </td>
+        </ng-container>
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef> Type </th>
+          <td mat-cell *matCellDef="let account">
+            <mat-chip [ngClass]="account.type === 'CurrentAccount' ? 'current-chip' : 'saving-chip'">
+              {{ account.type === 'CurrentAccount' ? 'Current' : 'Saving' }}
+            </mat-chip>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="balance">
+          <th mat-header-cell *matHeaderCellDef> Balance </th>
+          <td mat-cell *matCellDef="let account"> {{account.balance}} </td>
+        </ng-container>
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef> Created At </th>
+          <td mat-cell *matCellDef="let account"> {{account.createdAt | date}} </td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let account"> {{account.status}} </td>
+        </ng-container>
+        <ng-container matColumnDef="owner">
+          <th mat-header-cell *matHeaderCellDef> Owner </th>
+          <td mat-cell *matCellDef="let account"> {{account.customerDTO.name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let account">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="openOperationsDialog(account.id)">
+                <!--swap_horiz-->
+                <mat-icon>swap_horiz</mat-icon>
+                <span>Operations</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </ng-template>
+
+    <ng-template #tableContent>
+    </ng-template>
+  </mat-card-content>
+</mat-card>
