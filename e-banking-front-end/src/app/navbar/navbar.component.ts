@@ -3,6 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {NewCustomerComponent} from '../new-customer/new-customer.component';
 import {AuthService} from '../services/auth.service';
 import {Router} from '@angular/router';
+import {NewOperationComponent} from '../new-operation/new-operation.component';
 
 @Component({
   selector: 'app-navbar',
@@ -28,4 +29,11 @@ export class NavbarComponent implements OnInit {
     this.authService.logout();
   }
 
+  openNewOperationDialog() {
+    const dialogRef = this._dialog.open(NewOperationComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
 }

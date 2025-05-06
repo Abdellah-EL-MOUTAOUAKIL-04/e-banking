@@ -13,4 +13,7 @@ export class OperationService {
   public getOperations(accountId:string,page:number,size:number):Observable<Operation>{
     return this.httpClient.get<Operation>(environment.backendHost+`/accounts/${accountId}/pageOperations?size=${size}&page=${page}`);
   }
+  public saveOperation(operation:Operation):Observable<Operation>{
+    return this.httpClient.post<Operation>(environment.backendHost+`/operations`,operation);
+  }
 }

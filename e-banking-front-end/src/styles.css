@@ -37,4 +37,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   justify-content: space-between;
   align-items: center;
 }
-
+.full-width{
+  width: 100%;
+}

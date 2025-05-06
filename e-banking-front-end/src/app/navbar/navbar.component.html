@@ -23,6 +23,7 @@
   </button>
   <mat-menu #accountMenu>
     <button mat-menu-item routerLink="/admin/accounts" disableRipple>All Accounts</button>
+    <button mat-menu-item (click)="openNewOperationDialog()" disableRipple>New Operation</button>
   </mat-menu>
 
   <span class="navbar-spacer"></span>

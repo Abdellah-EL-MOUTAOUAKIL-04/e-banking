@@ -1,10 +1,6 @@
 package ma.abdellah.ebankingbackend.services;
 
 import ma.abdellah.ebankingbackend.dtos.*;
-import ma.abdellah.ebankingbackend.entities.BankAccount;
-import ma.abdellah.ebankingbackend.entities.CurrentAccount;
-import ma.abdellah.ebankingbackend.entities.Customer;
-import ma.abdellah.ebankingbackend.entities.SavingAccount;
 import ma.abdellah.ebankingbackend.exceptions.BalanceNotSufficientException;
 import ma.abdellah.ebankingbackend.exceptions.BankAccountNotFoundException;
 import ma.abdellah.ebankingbackend.exceptions.CustomerNotFoundException;
@@ -26,6 +22,7 @@ public interface BankAccountService {
     void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, BalanceNotSufficientException;
     void credit(String accountId, double amount, String description) throws BankAccountNotFoundException;
     void transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, BalanceNotSufficientException;
+    AccountOperationDTO saveOperation(AccountOperationDTO accountOperationDTO) throws BankAccountNotFoundException, BalanceNotSufficientException;
 
     List<BankAccountDTO> bankAccountList();
 

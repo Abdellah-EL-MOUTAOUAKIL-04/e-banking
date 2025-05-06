@@ -37,6 +37,16 @@ import {MatChip, MatChipsModule} from '@angular/material/chips';
 import { OperationsComponent } from './operations/operations.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
+import { NewOperationComponent } from './new-operation/new-operation.component';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+  MatDatepickerModule,
+  MatDatepickerToggle
+} from '@angular/material/datepicker';
+import {MatSelectModule} from '@angular/material/select';
+import {MatOptionModule} from '@angular/material/core';
+import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
 @NgModule({
   declarations: [
@@ -50,7 +60,8 @@ import {MatSortModule} from '@angular/material/sort';
     AdminTemplateComponent,
     NotAuthorizedComponent,
     LoadingSpinnerComponent,
-    OperationsComponent
+    OperationsComponent,
+    NewOperationComponent
   ],
   imports: [
     BrowserModule,
@@ -75,6 +86,10 @@ import {MatSortModule} from '@angular/material/sort';
     MatChipsModule,
     MatPaginatorModule,
     MatSortModule,
+    MatDatepickerModule,
+    MatMomentDateModule,
+    MatSelectModule,
+    MatOptionModule,
   ],
   providers: [
     provideHttpClient(withInterceptors([appHttpInterceptor]))

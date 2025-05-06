@@ -1,3 +1,5 @@
+import {Account} from './account.model';
+
 export interface Operation {
   accountId:         string;
   balance:           number;
@@ -9,6 +11,7 @@ export interface Operation {
 
 export interface AccountOperation {
   id:            number;
+  bankAccountDTO:Account;
   operationDate: Date;
   amount:        number;
   type:          string;

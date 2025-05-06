@@ -95,9 +95,6 @@ public class BankAccountServiceImpl implements BankAccountService{
         return dtoMapper.fromCurrentBankAccount((CurrentAccount) bankAccount);
     }
 
-
-
-
     @Override
     public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, BalanceNotSufficientException {
         BankAccount bankAccount=bankAccountRepository.findById(accountId).orElseThrow(()->new BankAccountNotFoundException("Bank account not found"));
@@ -131,6 +128,22 @@ public class BankAccountServiceImpl implements BankAccountService{
     public void transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, BalanceNotSufficientException {
         debit(accountIdSource, amount, "Transfer to "+accountIdDestination);
         credit(accountIdDestination, amount, "Transfer from "+accountIdSource);
+    }
+
+    @Override
+    public AccountOperationDTO saveOperation(AccountOperationDTO accountOperationDTO) throws BankAccountNotFoundException, BalanceNotSufficientException {
+        BankAccount bankAccount=bankAccountRepository.findById(accountOperationDTO.getBankAccountDTO().getId()).orElseThrow(()->new BankAccountNotFoundException("Bank account not found"));
+        if(accountOperationDTO.getType()==OperationType.DEBIT){
+            if(bankAccount.getBalance()<accountOperationDTO.getAmount()) throw new BalanceNotSufficientException("Insufficient balance");
+            bankAccount.setBalance(bankAccount.getBalance()-accountOperationDTO.getAmount());
+        }else{
+            bankAccount.setBalance(bankAccount.getBalance()+accountOperationDTO.getAmount());
+        }
+        AccountOperation accountOperation=dtoMapper.fromAccountOperationDTO(accountOperationDTO);
+        accountOperation.setBankAccount(bankAccount);
+        accountOperation.setOperationDate(new Date());
+        AccountOperation savedAccountOperation=accountOperationRepository.save(accountOperation);
+        return dtoMapper.fromAccountOperation(savedAccountOperation);
     }
 
     @Override
