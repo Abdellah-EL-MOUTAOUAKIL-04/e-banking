@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Operation' : 'New Operation' }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="newOperationFormGroup" (ngSubmit)="handleSaveOperation()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Account</mat-label>
+      <mat-select formControlName="bankAccountDTO" placeholder="Select Account">
+        <mat-option *ngFor="let account of accounts" [value]="account">
+          {{ account.id }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Operation Date</mat-label>
+      <input matInput formControlName="operationDate" [matDatepicker]="picker" placeholder="Enter operation date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Amount</mat-label>
+      <input matInput formControlName="amount" type="number" placeholder="Enter amount">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Type</mat-label>
+      <mat-select formControlName="type" placeholder="Select type">
+        <mat-option value="CREDIT">CREDIT</mat-option>
+        <mat-option value="DEBIT">DEBIT</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" placeholder="Enter description"></textarea>
+    </mat-form-field>
+
+    <div class="button-container" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+      <button mat-button mat-dialog-close color="warn">Cancel</button>
+      <button mat-button mat-dialog-close cdkFocusInitial color="primary" type="submit"
+        [disabled]="!newOperationFormGroup.valid">
+        {{ isEditMode ? 'Update' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>
