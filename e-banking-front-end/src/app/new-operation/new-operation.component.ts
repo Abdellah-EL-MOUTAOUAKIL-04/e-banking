@@ -20,6 +20,7 @@ export class NewOperationComponent implements OnInit {
   constructor(private fb:FormBuilder,private operationService:OperationService,private accountService:AccountService,private _snackBar: MatSnackBar,@Inject(MAT_DIALOG_DATA) public data: AccountOperation) { }
 
   ngOnInit(): void {
+    this.isEditMode = !!this.data;
     this.newOperationFormGroup= this.fb.group({
       id: [this.data?.id || null],
       bankAccountDTO: [this.data?.bankAccountDTO || null],
@@ -47,11 +48,19 @@ export class NewOperationComponent implements OnInit {
     console.log("Operation to save: ", operation);
     this.operationService.saveOperation(operation).subscribe({
       next: (data) => {
-        this._snackBar.open("Operation saved successfully", "Close", {duration: 2000});
+        this._snackBar.open("Operation saved successfully", "Close", {
+          duration: 3000,
+          verticalPosition:'top',
+          panelClass: ['success-snackbar','snackbar-below-navbar'],
+        });
         this.newOperationFormGroup.reset();
       },
       error: (err) => {
-        this._snackBar.open("Error saving operation", "Close", {duration: 2000});
+        this._snackBar.open("Error saving operation", "Close", {
+          duration: 3000,
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar','snackbar-below-navbar'],
+        });
       }
     });
   }

@@ -62,7 +62,7 @@ export class AccountsComponent implements OnInit{
     const dialogRef = this._dialog.open(OperationsComponent, {
       data:{accountId:id},
       autoFocus: false,
-      width: '600px',
+      width: '650px',
       height: 'auto',
     });
 

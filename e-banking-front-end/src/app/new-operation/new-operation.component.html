@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>{{ isEditMode ? 'Edit Operation' : 'New Operation' }}</h2>
 <mat-dialog-content>
   <form [formGroup]="newOperationFormGroup" (ngSubmit)="handleSaveOperation()">
-    <mat-form-field appearance="outline" class="full-width">
+    <mat-form-field *ngIf="!isEditMode" appearance="outline" class="full-width">
       <mat-label>Account</mat-label>
       <mat-select formControlName="bankAccountDTO" placeholder="Select Account">
         <mat-option *ngFor="let account of accounts" [value]="account">
