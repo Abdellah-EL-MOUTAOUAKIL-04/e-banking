@@ -46,9 +46,12 @@ export class AccountsComponent implements OnInit{
   handleSearchAccount() {
     this.loadingService.show();
     let keyword = this.searchFormGroup?.value.keyword;
-    this.accountService.searchAccounts(keyword).subscribe({
+    if(keyword==""){
+      this.loadAccounts();
+    }
+    this.accountService.getAccount(keyword).subscribe({
       next: (data) => {
-        this.accounts = data;
+        this.accounts = new Array<Account>(data);
         this.loadingService.hide();
       },
       error: (err) => {
