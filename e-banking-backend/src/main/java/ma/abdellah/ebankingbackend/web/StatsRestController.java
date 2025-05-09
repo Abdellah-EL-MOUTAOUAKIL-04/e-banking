@@ -26,6 +26,12 @@ public class StatsRestController {
     public Map<String, Map<String, Double>> getOperationsChartData(
             @RequestParam String startDate,
             @RequestParam String endDate) {
+        System.out.println("Start date: " + startDate + ", End date: " + endDate);
         return statsService.getOperationChartData(startDate, endDate);
+    }
+
+    @GetMapping("/accounts-by-type")
+    public Map<String, Long> getAccountsByType() {
+        return statsService.getAccountsByType();
     }
 }

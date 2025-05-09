@@ -63,8 +63,18 @@ public class StatsServiceImpl implements StatsService {
             Date start = sdf.parse(startDate);
             Date end = sdf.parse(endDate);
 
+            // Fix: include full day for endDate
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(end);
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            end = cal.getTime();
+
             List<AccountOperation> operations = accountOperationRepository.findByOperationDateBetween(start, end);
             SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            System.out.println("Found operations: " + operations.size());
 
             for (AccountOperation operation : operations) {
                 String day = dayFormat.format(operation.getOperationDate());
@@ -81,11 +91,20 @@ public class StatsServiceImpl implements StatsService {
             chartData.put("debit", debitData);
             chartData.put("credit", creditData);
             chartData.put("transfer", transferData);
-
+            System.out.println("Chart Data: " + chartData);
         } catch (Exception e) {
-            // Optional: Add error logging
+            e.printStackTrace(); // utile pour le debug
         }
 
         return chartData;
+    }
+    @Override
+    public Map<String, Long> getAccountsByType() {
+        Map<String, Long> typeStats = new HashMap<>();
+        bankAccountRepository.findAll().forEach(account -> {
+            String type = account.getClass().getSimpleName(); // e.g., CurrentAccount, SavingAccount
+            typeStats.put(type, typeStats.getOrDefault(type, 0L) + 1);
+        });
+        return typeStats;
     }
 }

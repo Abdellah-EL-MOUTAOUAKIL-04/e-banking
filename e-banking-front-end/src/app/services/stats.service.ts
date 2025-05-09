@@ -21,4 +21,7 @@ export class StatsService {
       .set('endDate', endDate);
     return this.http.get(`${environment.backendHost}/stats/operations-chart`, { params });
   }
+  getAccountsByType(): Observable<{ [type: string]: number }> {
+    return this.http.get<{ [type: string]: number }>(`${environment.backendHost}/stats/accounts-by-type`);
+  }
 }
