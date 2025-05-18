@@ -97,6 +97,7 @@ export class HomeComponent implements OnInit {
         this.numberOfCustomers = data.numberOfCustomers || 0;
         this.totalOperations = data.totalOperations || 0;
         this.totalAmount = data.totalAmount || 0;
+        console.log("Data : ",data);
       },
       error: err => console.error('Error fetching dashboard stats', err),
       complete: () => this.isLoading$.next(false)
