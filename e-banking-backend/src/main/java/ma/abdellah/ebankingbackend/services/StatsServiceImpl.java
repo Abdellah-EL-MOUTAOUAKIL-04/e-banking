@@ -43,7 +43,6 @@ public class StatsServiceImpl implements StatsService {
             stats.put("numberOfCustomers", numberOfCustomers);
             stats.put("totalOperations", totalOperations);
             stats.put("totalAmount", totalAmount);
-
         } catch (Exception e) {
             stats.put("error", "Invalid date format");
         }
