@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.2
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.12.2
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    volumes:
+      - ../logs:/usr/share/logstash/logs
+      - ./logstash/:/usr/share/logstash/pipeline
+    depends_on:
+      - elasticsearch
